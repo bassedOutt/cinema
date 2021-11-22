@@ -32,7 +32,7 @@ public class MovieDAO extends GenericDAO<Movie> {
         return preparedStatement;
     }
 
-    public boolean insertTranslation(Movie movie) {
+    public boolean insertTranslation(Movie movie) throws SQLException {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
@@ -44,9 +44,8 @@ public class MovieDAO extends GenericDAO<Movie> {
             stmt.setString(4, movie.getDescription());
             stmt.executeUpdate();
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        } catch (SQLException throwables) {
+            throw new SQLException("Can't insert movie translation" + throwables.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }
@@ -64,6 +63,7 @@ public class MovieDAO extends GenericDAO<Movie> {
     protected PreparedStatement getStatement(Movie movie, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.GET_MOVIE);
         preparedStatement.setString(1, movie.getTitle());
+        preparedStatement.setString(2,movie.getLanguage());
         return preparedStatement;
     }
 

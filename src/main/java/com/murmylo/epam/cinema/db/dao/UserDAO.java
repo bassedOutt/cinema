@@ -7,17 +7,6 @@ import java.sql.*;
 
 public class UserDAO extends GenericDAO<User> {
 
-    private UserDAO() {
-    }
-
-    private static UserDAO instance;
-
-    public static UserDAO getInstance() {
-        if (instance == null)
-            instance = new UserDAO();
-        return instance;
-    }
-
     @Override
     protected PreparedStatement insertStatement(User user, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(Query.INSERT_USER, Statement.RETURN_GENERATED_KEYS);

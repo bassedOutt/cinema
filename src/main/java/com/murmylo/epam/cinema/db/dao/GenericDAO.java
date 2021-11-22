@@ -21,7 +21,7 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
 
     protected abstract T getEntity(ResultSet rs) throws SQLException;
 
-    public List<T> findAll() {
+    public List<T> findAll() throws SQLException {
         List<T> entities = new ArrayList<>();
         try {
             Connection connection = ConnectionPool.getConnection();
@@ -33,12 +33,11 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             }
             return entities;
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw new SQLException("Can not obtain all entities of "+throwables.getMessage());
         }
-        return null;
     }
 
-    public boolean update(T entity){
+    public boolean update(T entity) throws SQLException {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
@@ -46,15 +45,14 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             stmt = updateStatement(entity, connection);
             stmt.executeUpdate();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
+            throw new SQLException("cannot update "+entity.getClass().getSimpleName());
         } finally {
             closeConnections(stmt, connection);
         }
         return true;
     }
 
-    public boolean delete(T entity) {
+    public boolean delete(T entity) throws SQLException {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
@@ -62,15 +60,14 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             stmt = deleteStatement(entity, connection);
             stmt.executeUpdate();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
+            throw new SQLException("Can not delete this " +entity.getClass().getSimpleName()+throwables.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }
         return true;
     }
 
-    public boolean insert(T entity) {
+    public boolean insert(T entity) throws SQLException {
         Connection connection = null;
         PreparedStatement stmt = null;
         try {
@@ -92,15 +89,14 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             }
 
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
+            throw new SQLException("Can't insert "+entity.getClass().getSimpleName()+throwables.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }
         return true;
     }
 
-    public T get(T entity) {
+    public T get(T entity) throws SQLException {
         Connection connection = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -111,7 +107,7 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             if(rs.next())
                 return getEntity(rs);
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw new SQLException("Can't get "+entity.getClass().getSimpleName()+throwables.getMessage());
         } finally {
             closeConnections(rs, stmt, connection);
         }
