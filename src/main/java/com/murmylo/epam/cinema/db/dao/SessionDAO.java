@@ -15,9 +15,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SessionDAO extends GenericDAO<Session> {
+
     @Override
     protected PreparedStatement updateStatement(Session session, Connection connection) throws SQLException {
-        return null;
+        PreparedStatement preparedStatement = connection.prepareStatement(Query.UPDATE_SESSION);
+        preparedStatement.setTime(1,session.getStartTime());
+        preparedStatement.setTime(2,session.getEndTime());
+        preparedStatement.setInt(3,session.getSeats_num());
+        preparedStatement.setDate(4,session.getDate());
+        preparedStatement.setInt(5,session.getPricing().getId());
+        preparedStatement.setInt(6,session.getId());
+        return preparedStatement;
     }
 
     @Override
@@ -33,7 +41,9 @@ public class SessionDAO extends GenericDAO<Session> {
 
     @Override
     protected PreparedStatement deleteStatement(Session session, Connection connection) throws SQLException {
-        return null;
+        PreparedStatement preparedStatement = connection.prepareStatement(Query.DELETE_SESSION);
+        preparedStatement.setInt(1,session.getId());
+        return preparedStatement;
     }
 
     @Override
@@ -96,6 +106,9 @@ public class SessionDAO extends GenericDAO<Session> {
             System.out.println(seats);
         }catch (Exception ex){
             ex.printStackTrace();
+        }
+        finally {
+            closeConnections(connection,preparedStatement);
         }
         return false;
     }

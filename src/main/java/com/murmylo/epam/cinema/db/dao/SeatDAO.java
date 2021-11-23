@@ -11,22 +11,30 @@ import java.sql.SQLException;
 public class SeatDAO extends GenericDAO<Seat>{
     @Override
     protected PreparedStatement updateStatement(Seat entity, Connection connection) throws SQLException {
-        return null;
+        PreparedStatement preparedStatement = connection.prepareStatement(Query.UPDATE_SEAT);
+        preparedStatement.setInt(1,entity.getReceiptId());
+        preparedStatement.setBoolean(2,entity.isTaken());
+        preparedStatement.setInt(3,entity.getId());
+        return preparedStatement;
     }
 
     @Override
     protected PreparedStatement insertStatement(Seat entity, Connection connection) throws SQLException {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected PreparedStatement deleteStatement(Seat entity, Connection connection) throws SQLException {
-        return null;
+        PreparedStatement preparedStatement = connection.prepareStatement(Query.DELETE_SEAT);
+        preparedStatement.setInt(1,entity.getId());
+        return preparedStatement;
     }
 
     @Override
     protected PreparedStatement getStatement(Seat entity, Connection connection) throws SQLException {
-        return null;
+        PreparedStatement preparedStatement = connection.prepareStatement(Query.GET_SEAT);
+        preparedStatement.setInt(1,entity.getId());
+        return  preparedStatement;
     }
 
     @Override
@@ -47,5 +55,4 @@ public class SeatDAO extends GenericDAO<Seat>{
         seat.setReceiptId(rs.getInt("receipt_id"));
         return seat;
     }
-
 }

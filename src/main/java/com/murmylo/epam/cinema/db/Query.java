@@ -8,7 +8,6 @@ public class Query {
     public static final String UPDATE_USER = "update user " +
             "set name =?,surname =?, email = ?, password =? where id =?";
 
-
     public static final String GET_ALL_MOVIE = "select movie.id,title,language,duration,image_url,start_date,description,price from movie\n" +
             " join movie_translation mt on movie.id = mt.movie_id;";
     public static final String GET_MOVIE = "select movie.id,title,language,duration,image_url,start_date,description,price from movie" +
@@ -32,9 +31,21 @@ public class Query {
             "    join movie_translation mt on m.id = mt.movie_id\n" +
             "    left join pricing p on s.pricing_id = p.id;";
     public static final String GET_SESSION_SEATS = "select id,nrow,number,is_vip,receipt_id,is_taken,session_id,movie_id from seat where session_id = ?;";
+    public static final String DELETE_SESSION = "delete from session where id = ?";
+    public static final String UPDATE_SESSION = "update session set" +
+            " start_time = ?,end_time = ?, seats_num = ?,date = ?, pricing_id=? where id = ?";
 
     public static final String GET_SEAT = "select id,nrow,number,is_vip,receipt_id,is_taken,session_id,movie_id from seat where id = ?";
     public static final String GET_ALL_SEAT = "select id,nrow,number,is_vip,receipt_id,is_taken,session_id,movie_id from seat where";
+    public static final String DELETE_SEAT = "delete from seat where id = ?";
+    public static final String UPDATE_SEAT = "update seat set" +
+            " receipt_id = ?, is_taken = ? where id = >";
+
+    public static final String GET_RECEIPT = "select id,user_id,price,session_id from receipt where id =?";
+    public static final String GET_ALL_RECEIPT = "select id,user_id,price,session_id from receipt";
+    public static final String INSERT_RECEIPT = "insert into pricing(user_id,price,session_id) values(?,?,?)";
+    public static final String DELETE_RECEIPT = "delete from pricing where id = ?";
+
 
 
 }
