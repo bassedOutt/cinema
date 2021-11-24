@@ -90,4 +90,8 @@ public class Session implements Entity {
                 ", pricing=" + pricing +
                 '}';
     }
+
+    public long getNumOfFreeSeats(){
+        return seats.stream().filter(seat -> seat.isTaken()==false).count();
+    }
 }

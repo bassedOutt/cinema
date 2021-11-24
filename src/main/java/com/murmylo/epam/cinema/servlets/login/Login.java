@@ -12,18 +12,14 @@ import java.io.IOException;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
-
     private final Logger logger = Logger.getLogger(Login.class);
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
         UserService userService = new UserService();
-
         User user = userService.get(new User(email,password));
-
-        logger.info("user"+user);
         request.getSession().setAttribute("user",user);
+        logger.info("User "+user.getId()+" logged out");
         try {
             response.sendRedirect(request.getContextPath());
         } catch (IOException e) {

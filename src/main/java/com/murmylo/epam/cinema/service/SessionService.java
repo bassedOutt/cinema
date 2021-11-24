@@ -5,7 +5,9 @@ import com.murmylo.epam.cinema.db.entity.Movie;
 import com.murmylo.epam.cinema.db.entity.Session;
 
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SessionService implements IService<Session>{
 
@@ -64,4 +66,27 @@ public class SessionService implements IService<Session>{
         }
         return null;
     }
+
+    public List<Session> findAllLocalized(String locale){
+       return findAll().stream().filter(s->s.getMovie().getLanguage().equals(locale)).collect(Collectors.toList());
+    }
+
+    public List<Session> filterSessions(String filter, List<Session> sessions){
+        switch (filter){
+            case "name":
+                 return (List<Session>) sessions.stream().sorted(byName).collect(Collectors.toList());
+            case "time":{
+                return (List<Session>) sessions.stream().sorted(byTime).collect(Collectors.toList());
+            }
+            case "seats":{
+                return (List<Session>) sessions.stream().sorted(bySeats).collect(Collectors.toList());
+            }
+        }
+        return sessions;
+    }
+
+    private Comparator byName = Comparator.comparing((Session s) -> s.getMovie().getTitle());
+    private Comparator byTime = Comparator.comparing((Session::getStartTime));
+    private Comparator bySeats = Comparator.comparing((Session s) -> s.getNumOfFreeSeats());
+
 }
