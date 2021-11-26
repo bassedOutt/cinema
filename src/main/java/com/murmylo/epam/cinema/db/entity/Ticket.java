@@ -5,6 +5,24 @@ public class Receipt implements Entity {
     private int userId;
     private double price;
     private int sessionId;
+    private int seat_id;
+    private int movie_id;
+
+    public int getSeat_id() {
+        return seat_id;
+    }
+
+    public void setSeat_id(int seat_id) {
+        this.seat_id = seat_id;
+    }
+
+    public int getMovie_id() {
+        return movie_id;
+    }
+
+    public void setMovie_id(int movie_id) {
+        this.movie_id = movie_id;
+    }
 
     @Override
     public int getId() {
