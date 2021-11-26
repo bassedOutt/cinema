@@ -1,8 +1,6 @@
 package com.murmylo.epam.cinema.servlets;
 
-import com.murmylo.epam.cinema.db.entity.Movie;
 import com.murmylo.epam.cinema.db.entity.Session;
-import com.murmylo.epam.cinema.service.MovieService;
 import com.murmylo.epam.cinema.service.SessionService;
 import org.apache.log4j.Logger;
 
@@ -17,26 +15,21 @@ public class IndexServlet extends HttpServlet {
 
     private final Logger logger = Logger.getLogger(IndexServlet.class);
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
-        String lan = (String) request.getSession().getAttribute("language");
-        logger.info("language " +lan);
-
+        String lan = (String) req.getSession().getAttribute("language");
         if(lan==null) {
             lan = "en";
-            request.getSession().setAttribute("language", lan);
+            req.getSession().setAttribute("language", lan);
         }
 
         SessionService sessionService = new SessionService();
         List<Session> sessions = sessionService.findAllLocalized(lan);
-        request.setAttribute("sessions",sessions);
-        logger.info("transferring list of sessions to frontend");
+        req.setAttribute("sessions",sessions);
 
         try {
-            request.getRequestDispatcher("index.jsp").forward(request,response);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            req.getRequestDispatcher("index.jsp").forward(req,resp);
+        } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
     }

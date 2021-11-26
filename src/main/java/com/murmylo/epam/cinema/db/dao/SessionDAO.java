@@ -7,10 +7,7 @@ import com.murmylo.epam.cinema.db.entity.Pricing;
 import com.murmylo.epam.cinema.db.entity.Seat;
 import com.murmylo.epam.cinema.db.entity.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +27,7 @@ public class SessionDAO extends GenericDAO<Session> {
 
     @Override
     protected PreparedStatement insertStatement(Session session, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(Query.INSERT_SESSION);
+        PreparedStatement preparedStatement = connection.prepareStatement(Query.INSERT_SESSION, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1,session.getMovie().getId());
         preparedStatement.setTime(2,session.getStartTime());
         preparedStatement.setTime(3,session.getEndTime());
@@ -103,7 +100,6 @@ public class SessionDAO extends GenericDAO<Session> {
                 seats.add(seat);
             }
             session.setSeats(seats);
-            System.out.println(seats);
         }catch (Exception ex){
             ex.printStackTrace();
         }

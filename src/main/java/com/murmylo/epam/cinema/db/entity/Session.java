@@ -14,6 +14,11 @@ public class Session implements Entity {
     private Pricing pricing;
     private List<Seat> seats;
 
+    public Session(int sessionId) {
+        this.id = sessionId;
+    }
+
+    public Session(){}
     public List<Seat> getSeats() {
         return seats;
     }
@@ -91,7 +96,9 @@ public class Session implements Entity {
                 '}';
     }
 
-    public long getNumOfFreeSeats(){
+
+
+    public long getFreeSeats(){
         return seats.stream().filter(seat -> seat.isTaken()==false).count();
     }
 }

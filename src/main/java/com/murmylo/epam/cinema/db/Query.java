@@ -35,16 +35,16 @@ public class Query {
     public static final String UPDATE_SESSION = "update session set" +
             " start_time = ?,end_time = ?, seats_num = ?,date = ?, pricing_id=? where id = ?";
 
-    public static final String GET_SEAT = "select id,nrow,number,is_vip,receipt_id,is_taken,session_id,movie_id from seat where id = ?";
-    public static final String GET_ALL_SEAT = "select id,nrow,number,is_vip,receipt_id,is_taken,session_id,movie_id from seat where";
+    public static final String GET_SEAT = "select id,nrow,number,is_vip,is_taken,session_id,movie_id from seat where id = ?";
+    public static final String GET_ALL_SEAT = "select id,nrow,number,is_vip,is_taken,session_id,movie_id from seat";
     public static final String DELETE_SEAT = "delete from seat where id = ?";
     public static final String UPDATE_SEAT = "update seat set" +
-            " receipt_id = ?, is_taken = ? where id = >";
+            " is_taken = ? where id = ?";
 
-    public static final String GET_RECEIPT = "select id,user_id,price,session_id from receipt where id =?";
-    public static final String GET_ALL_RECEIPT = "select id,user_id,price,session_id from receipt";
-    public static final String INSERT_RECEIPT = "insert into pricing(user_id,price,session_id) values(?,?,?)";
-    public static final String DELETE_RECEIPT = "delete from pricing where id = ?";
+    public static final String GET_TICKET = "select id,user_id,price,seat_id,seat_session_id,seat_movie_id from ticket where id =?";
+    public static final String GET_ALL_TICKET = "select id,user_id,price,seat_id,seat_session_id,seat_movie_id from ticket";
+    public static final String INSERT_TICKET = "insert into ticket(user_id,price,seat_id,seat_session_id,seat_movie_id) values(?,?,?,?,?)";
+    public static final String DELETE_TICKET = "delete from ticket where id = ?";
 
 
 

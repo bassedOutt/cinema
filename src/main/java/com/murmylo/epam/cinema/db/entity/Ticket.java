@@ -1,6 +1,6 @@
 package com.murmylo.epam.cinema.db.entity;
 
-public class Receipt implements Entity {
+public class Ticket implements Entity {
     private int id;
     private int userId;
     private double price;
@@ -48,6 +48,18 @@ public class Receipt implements Entity {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", price=" + price +
+                ", sessionId=" + sessionId +
+                ", seat_id=" + seat_id +
+                ", movie_id=" + movie_id +
+                '}';
     }
 
     public int getSessionId() {

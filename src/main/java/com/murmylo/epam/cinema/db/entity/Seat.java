@@ -3,9 +3,8 @@ package com.murmylo.epam.cinema.db.entity;
 public class Seat implements Entity {
     private int id;
     private int row;
-    private int number;
+    private int seatNumber;
     private boolean isVip;
-    private int receiptId;
     private boolean isTaken;
     private int sessionId;
     private int movieId;
@@ -20,6 +19,10 @@ public class Seat implements Entity {
         this.id = id;
     }
 
+    public int getSeat(){
+        return row*10+ seatNumber -10;
+    }
+
     public int getRow() {
         return row;
     }
@@ -28,12 +31,12 @@ public class Seat implements Entity {
         this.row = row;
     }
 
-    public int getNumber() {
-        return number;
+    public int getSeatNumber() {
+        return seatNumber;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setSeatNumber(int seatNumber) {
+        this.seatNumber = seatNumber;
     }
 
     public boolean isVip() {
@@ -42,14 +45,6 @@ public class Seat implements Entity {
 
     public void setVip(boolean vip) {
         this.isVip = vip;
-    }
-
-    public int getReceiptId() {
-        return receiptId;
-    }
-
-    public void setReceiptId(int receiptId) {
-        this.receiptId = receiptId;
     }
 
     public boolean isTaken() {
@@ -81,9 +76,8 @@ public class Seat implements Entity {
         return "Seat{" +
                 "id=" + id +
                 ", row=" + row +
-                ", number=" + number +
+                ", number=" + seatNumber +
                 ", isVip=" + isVip +
-                ", receiptId=" + receiptId +
                 ", isTaken=" + isTaken +
                 ", sessionId=" + sessionId +
                 ", movieId=" + movieId +

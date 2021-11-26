@@ -1,14 +1,13 @@
 package com.murmylo.epam.cinema.service;
 
 import com.murmylo.epam.cinema.db.dao.SeatDAO;
-import com.murmylo.epam.cinema.db.dao.SessionDAO;
 import com.murmylo.epam.cinema.db.entity.Seat;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public class SeatSession implements IService<Seat>{
-    private SeatDAO dao = new SeatDAO();
+public class SeatService implements IService<Seat>{
+    private final SeatDAO dao = new SeatDAO();
     @Override
     public boolean insert(Seat seat) {
         try {
@@ -45,16 +44,21 @@ public class SeatSession implements IService<Seat>{
     @Override
     public Seat get(Seat seat) {
         try {
-            dao.get(seat);
+            return dao.get(seat);
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
+        return null;
     }
 
     @Override
     public List<Seat> findAll() {
+        try {
+            return dao.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
+
 }

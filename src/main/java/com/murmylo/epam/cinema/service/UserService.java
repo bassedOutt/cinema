@@ -8,7 +8,7 @@ import java.util.List;
 
 public class UserService implements IService<User>{
 
-    private UserDAO dao = new UserDAO();
+    private final UserDAO dao = new UserDAO();
 
     @Override
     public boolean insert(User user) {
@@ -46,8 +46,7 @@ public class UserService implements IService<User>{
     @Override
     public User get(User user) {
         try {
-            User user1 = dao.get(user);
-            return user1;
+            return dao.get(user);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -57,8 +56,7 @@ public class UserService implements IService<User>{
     @Override
     public List<User> findAll() {
         try {
-            List<User> userList = dao.findAll();
-            return userList;
+            return dao.findAll();
         } catch (SQLException e) {
             e.printStackTrace();
         }

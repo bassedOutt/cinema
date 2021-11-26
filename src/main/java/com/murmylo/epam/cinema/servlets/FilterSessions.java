@@ -16,6 +16,7 @@ public class FilterSessions extends HttpServlet {
     private final Logger logger = Logger.getLogger(FilterSessions.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("start");
         String filter = req.getParameter("filter");
         String range = req.getParameter("range");
         String lan = (String) req.getSession().getAttribute("language");
@@ -25,15 +26,13 @@ public class FilterSessions extends HttpServlet {
 
         SessionService sessionService = new SessionService();
         List<Session> sessions = sessionService.findAllLocalized(lan);
-        sessions = sessionService.filterSessions(filter,sessions);
-        logger.info(sessions);
+        sessions = sessionService.sortSessions(filter,sessions);
+        sessions = sessionService.filterSessions(range,sessions);
         req.setAttribute("sessions",sessions);
 
         try {
             req.getRequestDispatcher("index.jsp").forward(req,resp);
-        } catch (ServletException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
     }

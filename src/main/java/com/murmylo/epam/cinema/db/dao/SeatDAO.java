@@ -12,9 +12,8 @@ public class SeatDAO extends GenericDAO<Seat>{
     @Override
     protected PreparedStatement updateStatement(Seat entity, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.UPDATE_SEAT);
-        preparedStatement.setInt(1,entity.getReceiptId());
-        preparedStatement.setBoolean(2,entity.isTaken());
-        preparedStatement.setInt(3,entity.getId());
+        preparedStatement.setBoolean(1,entity.isTaken());
+        preparedStatement.setInt(2,entity.getId());
         return preparedStatement;
     }
 
@@ -47,12 +46,11 @@ public class SeatDAO extends GenericDAO<Seat>{
         Seat seat = new Seat();
         seat.setId(rs.getInt("id"));
         seat.setRow(rs.getInt("nrow"));
-        seat.setNumber(rs.getInt("number"));
+        seat.setSeatNumber(rs.getInt("number"));
         seat.setTaken(rs.getBoolean("is_taken"));
         seat.setVip(rs.getBoolean("is_vip"));
         seat.setMovieId(rs.getInt("movie_id"));
         seat.setSessionId(rs.getInt("session_id"));
-        seat.setReceiptId(rs.getInt("receipt_id"));
         return seat;
     }
 }
