@@ -12,6 +12,10 @@ public class Movie implements Entity {
     private String description;
     private String language;
 
+    public Movie(int id) {
+        this.id = id;
+    }
+
     public String getLanguage() {
         return language;
     }

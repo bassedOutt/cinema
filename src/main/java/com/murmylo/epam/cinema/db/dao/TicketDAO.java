@@ -1,6 +1,9 @@
 package com.murmylo.epam.cinema.db.dao;
 
 import com.murmylo.epam.cinema.db.Query;
+import com.murmylo.epam.cinema.db.entity.Movie;
+import com.murmylo.epam.cinema.db.entity.Seat;
+import com.murmylo.epam.cinema.db.entity.Session;
 import com.murmylo.epam.cinema.db.entity.Ticket;
 
 import java.sql.*;
@@ -16,9 +19,9 @@ public class TicketDAO extends GenericDAO<Ticket>{
         PreparedStatement preparedStatement = connection.prepareStatement(Query.INSERT_TICKET, Statement.RETURN_GENERATED_KEYS);
         preparedStatement.setInt(1,entity.getUserId());
         preparedStatement.setDouble(2,entity.getPrice());
-        preparedStatement.setDouble(3,entity.getSeat_id());
-        preparedStatement.setInt(4,entity.getSessionId());
-        preparedStatement.setInt(5,entity.getMovie_id());
+        preparedStatement.setDouble(3,entity.getSeat().getId());
+        preparedStatement.setInt(4,entity.getSession().getId());
+        preparedStatement.setInt(5,entity.getSession().getMovie().getId());
         return preparedStatement;
     }
 
@@ -43,12 +46,20 @@ public class TicketDAO extends GenericDAO<Ticket>{
 
     @Override
     protected Ticket getEntity(ResultSet rs) throws SQLException {
-        Ticket receipt = new Ticket();
-        receipt.setId(rs.getInt("id"));
-        receipt.setSessionId(rs.getInt("session_id"));
-        receipt.setPrice(rs.getDouble("price"));
-        receipt.setUserId(rs.getInt("user_id"));
+        Ticket ticket = new Ticket();
+        ticket.setId(rs.getInt("id"));
+        ticket.setPrice(rs.getDouble("price"));
+        ticket.setUserId(rs.getInt("user_id"));
 
-        return receipt;
+        Session session = new Session(rs.getInt("seat_session_id"));
+        Movie movie = new Movie(rs.getInt("seat_movie_id"));
+        session.setMovie(movie);
+
+        Seat seat = new Seat(rs.getInt("seat_id"));
+
+        ticket.setSession(session);
+        ticket.setSeat(seat);
+
+        return ticket;
     }
 }

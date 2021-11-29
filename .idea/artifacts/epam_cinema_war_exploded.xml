@@ -21,6 +21,7 @@
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
           <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:5.0.0" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:2.0.0-alpha1" />
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.10.13" />
         </element>
       </element>
       <element id="directory" name="META-INF">

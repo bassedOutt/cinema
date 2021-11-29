@@ -9,7 +9,6 @@ public class Session implements Entity {
     private Movie movie;
     private Time startTime;
     private Time endTime;
-    private int seats_num;
     private Date date;
     private Pricing pricing;
     private List<Seat> seats;
@@ -19,6 +18,7 @@ public class Session implements Entity {
     }
 
     public Session(){}
+
     public List<Seat> getSeats() {
         return seats;
     }
@@ -59,14 +59,6 @@ public class Session implements Entity {
         this.endTime = endTime;
     }
 
-    public int getSeats_num() {
-        return seats_num;
-    }
-
-    public void setSeats_num(int seats_num) {
-        this.seats_num = seats_num;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -90,13 +82,11 @@ public class Session implements Entity {
                 ", movie=" + movie +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", seats_num=" + seats_num +
                 ", date=" + date +
                 ", pricing=" + pricing +
+                ", seats=" + seats +
                 '}';
     }
-
-
 
     public long getFreeSeats(){
         return seats.stream().filter(seat -> seat.isTaken()==false).count();

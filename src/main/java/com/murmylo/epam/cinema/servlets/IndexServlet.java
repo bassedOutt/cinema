@@ -17,6 +17,7 @@ public class IndexServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
 
+        logger.info("starts");
         String lan = (String) req.getSession().getAttribute("language");
         if(lan==null) {
             lan = "en";
@@ -25,12 +26,15 @@ public class IndexServlet extends HttpServlet {
 
         SessionService sessionService = new SessionService();
         List<Session> sessions = sessionService.findAllLocalized(lan);
+
         req.setAttribute("sessions",sessions);
 
+        logger.info("Sessions: "+sessions);
         try {
             req.getRequestDispatcher("index.jsp").forward(req,resp);
         } catch (ServletException | IOException e) {
             e.printStackTrace();
         }
+        logger.info("ends");
     }
 }

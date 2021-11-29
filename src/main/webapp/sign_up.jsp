@@ -2,7 +2,8 @@
 <html>
 <head>
     <title>Compound Interest Calculator</title>
-
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <c:set var="req" value="${pageContext.request}"/>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class>
@@ -13,7 +14,7 @@
         <!-- If the error attribute is present in the forwarded request, display it -->
         <h3 class="bg-red-300 text-red-900 font-semibold text-xl w-80 rounded-lg my-2 mx-auto">${error}</h3>
         <div>
-            <form action="/epam_cinema/sign_up" method="post">
+            <form action="${req.contextPath}/sign_up" method="post">
 
                 <div class="grid grid-cols-2 gap-2 my-5 mx-8">
 

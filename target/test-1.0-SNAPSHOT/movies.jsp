@@ -5,7 +5,6 @@
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <c:set var="req" value="${pageContext.request}"/>
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <%--    <%@ taglib prefix = "ex" uri = "WEB-INF/custom.tld"%>--%>
 </head>
 <body>
 <jsp:include page="header.jsp"></jsp:include>
@@ -25,6 +24,12 @@
                                 View sessions
                             </button>
                         </form>
+                    </div>
+                    <div class="flex align-middle w-2/3 space-x-2">
+                        <a class=" w-full text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                            href="${req.contextPath}/edit_movie?id=${movie.getId()}">Edit</a>
+                        <a class="w-full text-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                           href="${req.contextPath}/delete_movie?id=${movie.getId()}">Delete</a>
                     </div>
                 </div>
             </div>

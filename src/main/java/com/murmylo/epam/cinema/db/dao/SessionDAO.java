@@ -16,9 +16,9 @@ public class SessionDAO extends GenericDAO<Session> {
     @Override
     protected PreparedStatement updateStatement(Session session, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.UPDATE_SESSION);
-        preparedStatement.setTime(1,session.getStartTime());
-        preparedStatement.setTime(2,session.getEndTime());
-        preparedStatement.setInt(3,session.getSeats_num());
+        preparedStatement.setInt(1,session.getMovie().getId());
+        preparedStatement.setTime(2,session.getStartTime());
+        preparedStatement.setTime(3,session.getEndTime());
         preparedStatement.setDate(4,session.getDate());
         preparedStatement.setInt(5,session.getPricing().getId());
         preparedStatement.setInt(6,session.getId());
@@ -62,7 +62,6 @@ public class SessionDAO extends GenericDAO<Session> {
         session.setId(rs.getInt("s.id"));
         session.setStartTime(rs.getTime("start_time"));
         session.setEndTime(rs.getTime("end_time"));
-        session.setSeats_num(rs.getInt("seats_num"));
         session.setDate(rs.getDate("date"));
 
         Movie movie= new Movie();
@@ -72,7 +71,6 @@ public class SessionDAO extends GenericDAO<Session> {
         movie.setImageUrl(rs.getString("image_url"));
         movie.setDescription(rs.getString("description"));
         movie.setPrice(rs.getInt("m.price"));
-        movie.setStartDate(rs.getDate("start_date"));
         movie.setLanguage(rs.getString("language"));
 
         Pricing pricing = new Pricing();
@@ -112,16 +110,16 @@ public class SessionDAO extends GenericDAO<Session> {
 
     public boolean createSeats(Session session) throws SQLException {
         Connection connection = null;
-        PreparedStatement stmt = null;
+        CallableStatement stmt = null;
         try {
             connection = ConnectionPool.getConnection();
-            stmt = connection.prepareStatement(Query.CREATE_SEATS);
+            stmt = connection.prepareCall(Query.CREATE_SEATS);
             stmt.setInt(1,session.getId());
             stmt.setInt(2,session.getMovie().getId());
             stmt.executeUpdate();
             return true;
         } catch (SQLException throwables) {
-            throw new SQLException("Can't insert movie translation" + throwables.getMessage());
+            throw new SQLException("Can't create seats for this session. " + throwables.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }

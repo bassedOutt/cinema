@@ -9,6 +9,11 @@ public class Seat implements Entity {
     private int sessionId;
     private int movieId;
 
+    public Seat(int id) {
+        this.id = id;
+    }
+    public Seat(){}
+
     @Override
     public int getId() {
         return id;

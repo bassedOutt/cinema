@@ -4,24 +4,23 @@ public class Ticket implements Entity {
     private int id;
     private int userId;
     private double price;
-    private int sessionId;
-    private int seat_id;
-    private int movie_id;
+    private Session Session;
+    private Seat seat;
 
-    public int getSeat_id() {
-        return seat_id;
+    public Session getSession() {
+        return Session;
     }
 
-    public void setSeat_id(int seat_id) {
-        this.seat_id = seat_id;
+    public void setSession(Session session) {
+        Session = session;
     }
 
-    public int getMovie_id() {
-        return movie_id;
+    public Seat getSeat() {
+        return seat;
     }
 
-    public void setMovie_id(int movie_id) {
-        this.movie_id = movie_id;
+    public void setSeat(Seat seat) {
+        this.seat = seat;
     }
 
     @Override
@@ -56,17 +55,8 @@ public class Ticket implements Entity {
                 "id=" + id +
                 ", userId=" + userId +
                 ", price=" + price +
-                ", sessionId=" + sessionId +
-                ", seat_id=" + seat_id +
-                ", movie_id=" + movie_id +
+                ", Session=" + Session +
+                ", seat=" + seat +
                 '}';
-    }
-
-    public int getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
     }
 }

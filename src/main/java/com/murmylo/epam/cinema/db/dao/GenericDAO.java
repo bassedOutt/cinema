@@ -23,9 +23,11 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
 
     public List<T> findAll() throws SQLException {
         List<T> entities = new ArrayList<>();
+        Connection connection =null;
+        PreparedStatement stmt = null;
         try {
-            Connection connection = ConnectionPool.getConnection();
-            PreparedStatement stmt = getAllStatement(connection);
+            connection = ConnectionPool.getConnection();
+            stmt = getAllStatement(connection);
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 T entity = getEntity(resultSet);
@@ -34,6 +36,8 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             return entities;
         } catch (SQLException throwables) {
             throw new SQLException("Can not obtain all entities of "+throwables.getMessage());
+        }finally {
+            closeConnections(stmt, connection);
         }
     }
 
@@ -77,14 +81,14 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             int affectedRows = stmt.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Creating user failed, no rows affected.");
+                throw new SQLException("Creating entity failed, no rows affected.");
             }
 
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     entity.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
+                    throw new SQLException("Creating entity failed, no ID obtained.");
                 }
             }
 
@@ -107,7 +111,7 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             if(rs.next())
                 return getEntity(rs);
         } catch (SQLException throwables) {
-            throw new SQLException("Can't get "+entity.getClass().getSimpleName()+throwables.getMessage());
+            throw new SQLException("Can't get "+entity.getClass().getSimpleName()+" "+throwables.getMessage());
         } finally {
             closeConnections(rs, stmt, connection);
         }

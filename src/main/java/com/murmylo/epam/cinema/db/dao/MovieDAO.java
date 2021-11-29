@@ -12,13 +12,12 @@ public class MovieDAO extends GenericDAO<Movie> {
     protected PreparedStatement updateStatement(Movie movie, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.UPDATE_MOVIE);
         preparedStatement.setString(1, movie.getTitle());
-        preparedStatement.setString(2, movie.getLanguage());
-        preparedStatement.setInt(3, movie.getDuration());
-        preparedStatement.setString(4, movie.getImageUrl());
-        preparedStatement.setDate(5, movie.getStartDate());
-        preparedStatement.setString(6, movie.getDescription());
-        preparedStatement.setInt(7, movie.getPrice());
-        preparedStatement.setInt(8, movie.getId());
+        preparedStatement.setInt(2, movie.getDuration());
+        preparedStatement.setString(3, movie.getImageUrl());
+        preparedStatement.setString(4, movie.getDescription());
+        preparedStatement.setInt(5, movie.getPrice());
+        preparedStatement.setInt(6, movie.getId());
+        preparedStatement.setString(7, movie.getLanguage());
         return preparedStatement;
     }
 
@@ -28,7 +27,6 @@ public class MovieDAO extends GenericDAO<Movie> {
         preparedStatement.setInt(1, movie.getDuration());
         preparedStatement.setString(2, movie.getImageUrl());
         preparedStatement.setInt(3, movie.getPrice());
-        preparedStatement.setDate(4, movie.getStartDate());
         return preparedStatement;
     }
 
@@ -55,7 +53,7 @@ public class MovieDAO extends GenericDAO<Movie> {
     @Override
     protected PreparedStatement deleteStatement(Movie movie, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.DELETE_MOVIE);
-        preparedStatement.setString(1, movie.getTitle());
+        preparedStatement.setInt(1, movie.getId());
         return preparedStatement;
     }
 
@@ -63,7 +61,6 @@ public class MovieDAO extends GenericDAO<Movie> {
     protected PreparedStatement getStatement(Movie movie, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.GET_MOVIE);
         preparedStatement.setString(1, movie.getTitle());
-        preparedStatement.setString(2,movie.getLanguage());
         return preparedStatement;
     }
 
@@ -71,6 +68,24 @@ public class MovieDAO extends GenericDAO<Movie> {
     protected PreparedStatement getAllStatement(Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.GET_ALL_MOVIE);
         return preparedStatement;
+    }
+
+    public Movie getLocale(Movie movie) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = ConnectionPool.getConnection();
+            preparedStatement = connection.prepareStatement(Query.GET_MOVIE_LOCALE);
+            preparedStatement.setInt(1, movie.getId());
+            preparedStatement.setString(2, movie.getLanguage());
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next())
+                return getEntity(rs);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -82,7 +97,6 @@ public class MovieDAO extends GenericDAO<Movie> {
         movie.setImageUrl(rs.getString("image_url"));
         movie.setDescription(rs.getString("description"));
         movie.setPrice(rs.getInt("price"));
-        movie.setStartDate(rs.getDate("start_date"));
         movie.setLanguage(rs.getString("language"));
         return movie;
     }

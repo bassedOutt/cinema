@@ -42,6 +42,9 @@ public class MovieService implements IService<Movie>{
         return true;
     }
 
+    public Movie getLocale(Movie movie){
+        return dao.getLocale(movie);
+    }
     @Override
     public Movie get(Movie movie) {
         try {

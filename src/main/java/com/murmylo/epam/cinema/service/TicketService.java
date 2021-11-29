@@ -56,6 +56,17 @@ public class TicketService implements IService<Ticket> {
         return null;
     }
 
+    public void getFull(Ticket ticket, String locale){
+        SessionService service = new SessionService();
+        Session movieSession = service.findAllLocalized(locale).stream().filter(session ->session.getId()== ticket.getSession().getId()).findFirst().get();
+
+        SeatService seatService = new SeatService();
+        Seat movieSeat = seatService.findAll().stream().filter(seat ->seat.getId() == ticket.getSeat().getId()).findFirst().get();
+
+        ticket.setSeat(movieSeat);
+        ticket.setSession(movieSession);
+    }
+
     @Override
     public List<Ticket> findAll() {
         try {
@@ -66,17 +77,24 @@ public class TicketService implements IService<Ticket> {
         return null;
     }
 
-    public List<Ticket> findUserTickets(User user) throws SQLException {
-        return dao.findAll().stream().filter(ticket -> ticket.getUserId()==user.getId()).collect(Collectors.toList());
+    public List<Ticket> findAllFull(String locale){
+        try {
+            List<Ticket> tickets = dao.findAll();
+            for(Ticket ticket:tickets){
+                getFull(ticket,locale);
+            }
+            return tickets;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public Session getMovieSession(List<Session> sessions,Ticket ticket){
-        return sessions.stream().filter(session ->session.getId()== ticket.getId()).findFirst().get();
+    public List<Ticket> findUserTickets(User user,String locale) throws SQLException {
+
+        return this.findAllFull(locale).stream().filter(ticket -> ticket.getUserId()==user.getId()).collect(Collectors.toList());
     }
 
-    public Seat getSeat(List<Seat> seats, Ticket ticket){
-        return seats.stream().filter(seat ->seat.getId() == ticket.getId()).findFirst().get();
-    }
 
 }
 

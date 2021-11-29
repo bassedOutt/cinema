@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class SeatService implements IService<Seat>{
+
     private final SeatDAO dao = new SeatDAO();
     @Override
     public boolean insert(Seat seat) {

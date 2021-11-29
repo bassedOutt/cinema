@@ -19,9 +19,9 @@
             <form method="get" action="${req.contextPath}/filter">
                 <div class="flex flex-col h-5 sm:h-7 md:h-10 lg:h-10 2xl:h-20 md:mt-1 lg:mt-5 mb-5 bg-menu_item hover:bg-menu_item_hover border-t-2 justify-center border-b-2 ">
                     <select name="range" class="bg-white h-12 hover:bg-gray-100">
-                        <option selected value="today">Today</option>
+                        <option value="today">Today</option>
                         <option value="tomorrow">Tomorrow</option>
-                        <option value="week">Week</option>
+                        <option selected value="week">Week</option>
                     </select>
                 </div>
 
@@ -54,23 +54,34 @@
             </form>
         </div>
     </div>
-    <div class="grid grid-cols-4 gap-2 p-5 w-full">
-        <c:forEach var="session" items="${sessions}">
-            <div class="px-4 py-2 flex flex-col align-middle items-center border-4 hover:bg-gray-100 border-light-blue-500 border-opacity-25 rounded-md">
-                <img src="${session.getMovie().getImageUrl()}" class="w-52 h-52">
-                <div class="m-1 font-medium text-lg">${session.getMovie().getTitle()}</div>
-                <div class="m-1">${session.getDate()}</div>
-                <div class="m-1">${session.getStartTime()} - ${session.getEndTime()}</div>
-                <div class="m-1">
-                    <form method="get" action="${req.contextPath}/movie_session">
-                        <input type="hidden" name="id" value="${session.getId()}">
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Buy ticket
-                        </button>
-                    </form>
+
+
+    <div class="flex flex-col items-center align-middle w-full h-screen">
+        <div class="grid grid-cols-4 gap-2 p-5 w-full">
+            <c:forEach var="session" items="${sessions}">
+                <div class="px-4 py-2 flex flex-col align-middle items-center border-4 hover:bg-gray-100 border-light-blue-500 border-opacity-25 rounded-md">
+                    <img src="${session.getMovie().getImageUrl()}" class="w-52 h-52">
+                    <div class="m-1 font-medium text-lg">${session.getMovie().getTitle()}</div>
+                    <div class="m-1">${session.getDate()}</div>
+                    <div class="m-1">${session.getStartTime()} - ${session.getEndTime()}</div>
+                    <div class="m-1">Free seats: ${session.getFreeSeats()}</div>
+                    <div class="m-1">
+                        <form method="get" action="${req.contextPath}/movie_session">
+                            <input type="hidden" name="id" value="${session.getId()}">
+                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                Buy ticket
+                            </button>
+                        </form>
+                    </div>
+                    <div class="flex align-middle w-2/3 space-x-2">
+                        <a class=" w-full text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                           href="${req.contextPath}/edit_session?id=${session.getId()}">Edit</a>
+                        <a class="w-full text-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                           href="${req.contextPath}/delete_session?id=${session.getId()}">Delete</a>
+                    </div>
                 </div>
-            </div>
-        </c:forEach>
+            </c:forEach>
+        </div>
     </div>
 </div>
 </body>

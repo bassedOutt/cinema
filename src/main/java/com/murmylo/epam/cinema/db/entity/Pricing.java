@@ -3,7 +3,13 @@ package com.murmylo.epam.cinema.db.entity;
 public class Pricing implements Entity{
     private int id;
     private String name;
-    private int price;
+    private double price;
+
+    public Pricing(int id) {
+        this.id = id;
+    }
+
+    public Pricing(){}
 
     @Override
     public int getId() {
@@ -23,11 +29,11 @@ public class Pricing implements Entity{
         this.name = name;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }

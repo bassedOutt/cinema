@@ -21,8 +21,9 @@ public class ChangeLanguage  extends HttpServlet {
         req.getSession().setAttribute("language",lang);
 
 
+        req.getServletPath();
         try {
-            resp.sendRedirect(req.getContextPath()+"/index");
+            resp.sendRedirect(req.getContextPath()+"/index.jsp");
             logger.info("end");
         } catch (IOException e) {
             e.printStackTrace();
