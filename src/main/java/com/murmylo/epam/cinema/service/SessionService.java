@@ -80,6 +80,10 @@ public class SessionService implements IService<Session> {
         return findAll().stream().filter(s -> s.getMovie().getLanguage().equals(locale)).collect(Collectors.toList());
     }
 
+    public List<Session> findNLocalized(int offset,int n,String locale){
+        return this.findAllLocalized(locale).stream().skip(offset).limit(n).collect(Collectors.toList());
+    }
+
     public List<Session> sortSessions(String filter, List<Session> sessions) {
         switch (filter) {
             case "name":

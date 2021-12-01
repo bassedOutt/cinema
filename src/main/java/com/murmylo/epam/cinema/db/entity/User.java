@@ -9,7 +9,7 @@ public class User implements Serializable, Entity {
     private String surname;
     private String email;
     private String password;
-    private boolean isAdmin;
+    private boolean isAdmin =false;
 
     public User(String email, String password) {
         this.email = email;
