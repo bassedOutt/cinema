@@ -6,19 +6,21 @@ import com.murmylo.epam.cinema.db.entity.Session;
 import com.murmylo.epam.cinema.db.entity.User;
 import com.murmylo.epam.cinema.service.SeatService;
 import com.murmylo.epam.cinema.service.TicketService;
+import com.murmylo.epam.cinema.servlets.CommonServlet;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/buy_tickets")
-public class BuyTicketsServlet extends HttpServlet {
+public class BuyTicketsServlet extends CommonServlet {
 
     private final Logger logger = Logger.getLogger(BuyTicketsServlet.class);
 
@@ -39,24 +41,25 @@ public class BuyTicketsServlet extends HttpServlet {
         Session session = (Session) req.getSession().getAttribute("movieSession");
 
         SeatService seatService = new SeatService();
-        List<Seat> seats = seatService.findAll();
+        List<Seat> seats = null;
+        try {
+            seats = seatService.findAll();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            req.getSession().setAttribute("errormsg", e.getMessage());
+            sendRedirect("error.jsp", resp);
+        }
         List<Seat> ticketSeats = new ArrayList<>();
 
         //check if seats are not taken
-        for (int i = 0; i < seatNumbers.size(); i++) {
-            int row = seatNumbers.get(i) / rowLength + 1;
-            int number = seatNumbers.get(i) % rowLength == 0 ? rowLength : seatNumbers.get(i) % rowLength;
-            for (int j = 0; j < seats.size(); j++) {
-                Seat seat = seats.get(j);
+        for (Integer seatNumber : seatNumbers) {
+            int row = seatNumber / rowLength + 1;
+            int number = seatNumber % rowLength == 0 ? rowLength : seatNumber % rowLength;
+            for (Seat seat : Objects.requireNonNull(seats)) {
                 if (seat.getSessionId() == session.getId() && seat.getRow() == row && seat.getSeatNumber() == number) {
                     if (seat.isTaken()) {
                         req.setAttribute("errormessage", "Sorry, this seat was already taken by another user");
-                        try {
-                            req.getRequestDispatcher("view_tickets.jsp").forward(req, resp);
-                            logger.info("end");
-                        } catch (ServletException | IOException e) {
-                            e.printStackTrace();
-                        }
+                        forward("view_tickets.jsp", req, resp);
                     }
                     ticketSeats.add(seat);
                 }
@@ -69,27 +72,35 @@ public class BuyTicketsServlet extends HttpServlet {
         TicketService ticketService = new TicketService();
         User user = (User) req.getSession().getAttribute("user");
         //update seats
-        for (int i = 0; i < ticketSeats.size(); i++) {
-            ticketSeats.get(i).setTaken(true);
-            seatService.update(ticketSeats.get(i));
+        for (Seat ticketSeat : ticketSeats) {
+            ticketSeat.setTaken(true);
+            try {
+                seatService.update(ticketSeat);
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                req.getSession().setAttribute("errormsg", e.getMessage());
+                sendRedirect("error.jsp", resp);
+            }
 
             Ticket ticket = new Ticket();
-            if (ticketSeats.get(i).isVip())
+            if (ticketSeat.isVip())
                 ticket.setPrice(vipPrice);
             else
                 ticket.setPrice(standardPrice);
-            ticket.setSession( session);
+            ticket.setSession(session);
             ticket.setUserId(user.getId());
 
-            ticket.setSeat(ticketSeats.get(i));
-            ticketService.insert(ticket);
+            ticket.setSeat(ticketSeat);
+            try {
+                ticketService.insert(ticket);
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                req.getSession().setAttribute("errormsg", e.getMessage());
+                sendRedirect("error.jsp", resp);
+            }
         }
 
-        try {
-            req.getRequestDispatcher("/tickets").forward(req,resp);
-            logger.info("transferred request to servlet: "+ViewTicketsServlet.class.getSimpleName());
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
-        }
+        forward("/tickets", req, resp);
+
     }
 }

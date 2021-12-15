@@ -21,14 +21,12 @@ public class UserDAO extends GenericDAO<User> {
     protected PreparedStatement getStatement(User user, Connection connection) throws SQLException {
         PreparedStatement stmt = connection.prepareStatement(Query.GET_USER);
         stmt.setString(1, user.getEmail());
-        stmt.setString(2, user.getPassword());
         return stmt;
     }
 
     @Override
     protected PreparedStatement getAllStatement(Connection connection) throws SQLException {
-        PreparedStatement stmt = connection.prepareStatement(Query.GET_ALL_USER);
-        return stmt;
+        return connection.prepareStatement(Query.GET_ALL_USER);
     }
 
     @Override

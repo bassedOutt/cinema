@@ -5,6 +5,7 @@ import com.murmylo.epam.cinema.db.entity.Movie;
 import com.murmylo.epam.cinema.db.ConnectionPool;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class MovieDAO extends GenericDAO<Movie> {
 
@@ -35,15 +36,15 @@ public class MovieDAO extends GenericDAO<Movie> {
         PreparedStatement stmt = null;
         try {
             connection = ConnectionPool.getConnection();
-            stmt = connection.prepareStatement(Query.INSERT_MOVIE_TRANSLATION);
+            stmt = Objects.requireNonNull(connection).prepareStatement(Query.INSERT_MOVIE_TRANSLATION);
             stmt.setInt(1, movie.getId());
             stmt.setString(2, movie.getLanguage());
             stmt.setString(3, movie.getTitle());
             stmt.setString(4, movie.getDescription());
             stmt.executeUpdate();
             return true;
-        } catch (SQLException throwables) {
-            throw new SQLException("Can't insert movie translation" + throwables.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException("Can't insert movie translation " + e.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }
@@ -66,25 +67,20 @@ public class MovieDAO extends GenericDAO<Movie> {
 
     @Override
     protected PreparedStatement getAllStatement(Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(Query.GET_ALL_MOVIE);
-        return preparedStatement;
+        return connection.prepareStatement(Query.GET_ALL_MOVIE);
     }
 
-    public Movie getLocale(Movie movie) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = ConnectionPool.getConnection();
-            preparedStatement = connection.prepareStatement(Query.GET_MOVIE_LOCALE);
-            preparedStatement.setInt(1, movie.getId());
-            preparedStatement.setString(2, movie.getLanguage());
+    public Movie getLocale(Movie movie) throws SQLException {
+        Connection connection;
+        PreparedStatement preparedStatement;
+        connection = ConnectionPool.getConnection();
+        preparedStatement = Objects.requireNonNull(connection).prepareStatement(Query.GET_MOVIE_LOCALE);
+        preparedStatement.setInt(1, movie.getId());
+        preparedStatement.setString(2, movie.getLanguage());
 
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next())
-                return getEntity(rs);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        ResultSet rs = preparedStatement.executeQuery();
+        if (rs.next())
+            return getEntity(rs);
         return null;
     }
 

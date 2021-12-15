@@ -4,14 +4,13 @@ import com.murmylo.epam.cinema.db.entity.Session;
 import com.murmylo.epam.cinema.service.SessionService;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
-public class IndexServlet extends HttpServlet {
+public class IndexServlet extends CommonServlet {
 
     private final Logger logger = Logger.getLogger(IndexServlet.class);
 
@@ -31,22 +30,54 @@ public class IndexServlet extends HttpServlet {
         if (req.getParameter("page") != null) {
             page = Integer.parseInt(req.getParameter("page"));
         }
-        int noOfRecords = sessionService.findAllLocalized(lan).size();
+
+        List<Session> sessions = null;
+        try {
+            sessions = sessionService.findAllLocalized(lan);
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            req.getSession().setAttribute("errormsg", e.getMessage());
+            sendRedirect("error.jsp", resp);
+        }
+
+        String filter = req.getParameter("filter");
+        String range = req.getParameter("range");
+
+        if (filter != null) {
+            req.getSession().setAttribute("filter", filter);
+        }
+
+        if (range != null) {
+            req.getSession().setAttribute("range", range);
+        }
+
+        String sfilter = (String) req.getSession().getAttribute("filter");
+        String srange = (String) req.getSession().getAttribute("range");
+
+        logger.debug("filter: " + sfilter);
+        logger.debug("range: " + srange);
+        logger.debug(srange);
+
+        if (sfilter != null)
+            sessions = sessionService.sortSessions(sfilter, sessions);
+
+        if (srange != null)
+            sessions = sessionService.filterSessions(srange, sessions);
+
+        int noOfRecords = sessions != null ? sessions.size() : 0;
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
 
-        List<Session> sessions = sessionService.findNLocalized((page-1)*recordsPerPage,
-                recordsPerPage,lan);
+        List<Session> sessions1 = sessionService.findN((page - 1) * recordsPerPage,
+                recordsPerPage, Objects.requireNonNull(sessions));
 
         req.setAttribute("currentPage", page);
         req.setAttribute("noOfPages", noOfPages);
-        req.setAttribute("sessions", sessions);
+        req.setAttribute("sessions", sessions1);
 
-        logger.info("Sessions: " + sessions);
-        try {
-            req.getRequestDispatcher("index.jsp").forward(req, resp);
-        } catch (ServletException | IOException e) {
-            e.printStackTrace();
-        }
         logger.info("ends");
+
+        forward("index.jsp", req, resp);
     }
+
+
 }

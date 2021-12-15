@@ -9,12 +9,7 @@ public class User implements Serializable, Entity {
     private String surname;
     private String email;
     private String password;
-    private boolean isAdmin =false;
-
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
+    private boolean isAdmin = false;
 
     public User(String name, String surname, String email, String password) {
         this.name = name;
@@ -44,6 +39,10 @@ public class User implements Serializable, Entity {
 
 
     public User() {
+    }
+
+    public User(String email) {
+        this.email = email;
     }
 
     public int getId() {
@@ -107,7 +106,7 @@ public class User implements Serializable, Entity {
     }
 
     public boolean equals(User user) {
-        return this.email.equals(user.email)&&this.password.equals(user.password);
+        return this.email.equals(user.email) && this.password.equals(user.password);
     }
 
     @Override

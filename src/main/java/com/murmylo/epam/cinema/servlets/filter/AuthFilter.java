@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AuthFilter implements Filter {
 
-    private Logger logger = Logger.getLogger(AuthFilter.class);
+    private final Logger logger = Logger.getLogger(AuthFilter.class);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

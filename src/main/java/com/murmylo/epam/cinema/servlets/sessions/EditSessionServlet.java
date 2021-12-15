@@ -6,36 +6,44 @@ import com.murmylo.epam.cinema.db.entity.Session;
 import com.murmylo.epam.cinema.service.MovieService;
 import com.murmylo.epam.cinema.service.PricingService;
 import com.murmylo.epam.cinema.service.SessionService;
+import com.murmylo.epam.cinema.servlets.CommonServlet;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/edit_session")
-public class EditSessionServlet extends HttpServlet {
+public class EditSessionServlet extends CommonServlet {
 
-    private Logger logger = Logger.getLogger(EditSessionServlet.class);
+    private final Logger logger = Logger.getLogger(EditSessionServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("starts");
 
-        int id = 0;
+        int id;
         Session session = new Session();
         String lang = (String) req.getSession().getAttribute("language");
 
         MovieService movieService = new MovieService();
-        List<Movie> movies = movieService.findAllLocale(lang);
+        PricingService pricingService = new PricingService();
+        List<Movie> movies = null;
+        try {
+            movies = movieService.findAllLocale(lang);
+            List<Pricing> pricingList = pricingService.findAll();
+            req.setAttribute("pricings", pricingList);
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+            req.getSession().setAttribute("errormsg", e.getMessage());
+            sendRedirect("error.jsp", resp);
+        }
         req.setAttribute("movies", movies);
 
-        PricingService pricingService = new PricingService();
-        List<Pricing> pricingList = pricingService.findAll();
-        req.setAttribute("pricings", pricingList);
 
         if (!(req.getParameter("id") == null)) {
             id = Integer.parseInt(req.getParameter("id"));
@@ -43,7 +51,14 @@ public class EditSessionServlet extends HttpServlet {
             session.setMovie(new Movie(lang));
 
             SessionService sessionService = new SessionService();
-            Session session1 = sessionService.get(session);
+            Session session1 = null;
+            try {
+                session1 = sessionService.get(session);
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                req.getSession().setAttribute("errormsg", e.getMessage());
+                sendRedirect("error.jsp", resp);
+            }
             req.setAttribute("session1", session1);
             logger.debug("session: " + session1);
 
@@ -55,7 +70,7 @@ public class EditSessionServlet extends HttpServlet {
         try {
             req.getRequestDispatcher("session_form.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
         logger.info("ends");
     }

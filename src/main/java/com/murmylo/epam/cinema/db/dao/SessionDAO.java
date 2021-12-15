@@ -16,38 +16,38 @@ public class SessionDAO extends GenericDAO<Session> {
     @Override
     protected PreparedStatement updateStatement(Session session, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.UPDATE_SESSION);
-        preparedStatement.setInt(1,session.getMovie().getId());
-        preparedStatement.setTime(2,session.getStartTime());
-        preparedStatement.setTime(3,session.getEndTime());
-        preparedStatement.setDate(4,session.getDate());
-        preparedStatement.setInt(5,session.getPricing().getId());
-        preparedStatement.setInt(6,session.getId());
+        preparedStatement.setInt(1, session.getMovie().getId());
+        preparedStatement.setTime(2, session.getStartTime());
+        preparedStatement.setTime(3, session.getEndTime());
+        preparedStatement.setDate(4, session.getDate());
+        preparedStatement.setInt(5, session.getPricing().getId());
+        preparedStatement.setInt(6, session.getId());
         return preparedStatement;
     }
 
     @Override
     protected PreparedStatement insertStatement(Session session, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.INSERT_SESSION, Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setInt(1,session.getMovie().getId());
-        preparedStatement.setTime(2,session.getStartTime());
-        preparedStatement.setTime(3,session.getEndTime());
-        preparedStatement.setDate(4,session.getDate());
-        preparedStatement.setInt(5,session.getPricing().getId());
+        preparedStatement.setInt(1, session.getMovie().getId());
+        preparedStatement.setTime(2, session.getStartTime());
+        preparedStatement.setTime(3, session.getEndTime());
+        preparedStatement.setDate(4, session.getDate());
+        preparedStatement.setInt(5, session.getPricing().getId());
         return preparedStatement;
     }
 
     @Override
     protected PreparedStatement deleteStatement(Session session, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.DELETE_SESSION);
-        preparedStatement.setInt(1,session.getId());
+        preparedStatement.setInt(1, session.getId());
         return preparedStatement;
     }
 
     @Override
     protected PreparedStatement getStatement(Session session, Connection connection) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(Query.GET_SESSION);
-        preparedStatement.setString(1,session.getMovie().getLanguage());
-        preparedStatement.setInt(2,session.getId());
+        preparedStatement.setString(1, session.getMovie().getLanguage());
+        preparedStatement.setInt(2, session.getId());
         return preparedStatement;
     }
 
@@ -64,7 +64,7 @@ public class SessionDAO extends GenericDAO<Session> {
         session.setEndTime(rs.getTime("end_time"));
         session.setDate(rs.getDate("date"));
 
-        Movie movie= new Movie();
+        Movie movie = new Movie();
         movie.setId(rs.getInt("m.id"));
         movie.setTitle(rs.getString("title"));
         movie.setDuration(rs.getInt("duration"));
@@ -89,20 +89,19 @@ public class SessionDAO extends GenericDAO<Session> {
         PreparedStatement preparedStatement = null;
         try {
             preparedStatement = connection.prepareStatement(Query.GET_SESSION_SEATS);
-            preparedStatement.setInt(1,session.getId());
+            preparedStatement.setInt(1, session.getId());
             ResultSet rs = preparedStatement.executeQuery();
             List<Seat> seats = new ArrayList<>();
             SeatDAO seatDAO = new SeatDAO();
-            while(rs.next()){
+            while (rs.next()) {
                 Seat seat = seatDAO.getEntity(rs);
                 seats.add(seat);
             }
             session.setSeats(seats);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }
-        finally {
-            closeConnections(connection,preparedStatement);
+        } finally {
+            closeConnections(connection, preparedStatement);
         }
         return false;
     }
@@ -114,8 +113,8 @@ public class SessionDAO extends GenericDAO<Session> {
         try {
             connection = ConnectionPool.getConnection();
             stmt = connection.prepareCall(Query.CREATE_SEATS);
-            stmt.setInt(1,session.getId());
-            stmt.setInt(2,session.getMovie().getId());
+            stmt.setInt(1, session.getId());
+            stmt.setInt(2, session.getMovie().getId());
             stmt.executeUpdate();
             return true;
         } catch (SQLException throwables) {

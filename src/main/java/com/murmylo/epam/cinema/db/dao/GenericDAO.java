@@ -2,12 +2,15 @@ package com.murmylo.epam.cinema.db.dao;
 
 import com.murmylo.epam.cinema.db.ConnectionPool;
 import com.murmylo.epam.cinema.db.entity.Entity;
+import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
+
+    protected final Logger logger = Logger.getLogger(GenericDAO.class);
 
     protected abstract PreparedStatement updateStatement(T entity, Connection connection) throws SQLException;
 
@@ -23,7 +26,7 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
 
     public List<T> findAll() throws SQLException {
         List<T> entities = new ArrayList<>();
-        Connection connection =null;
+        Connection connection = null;
         PreparedStatement stmt = null;
         try {
             connection = ConnectionPool.getConnection();
@@ -34,9 +37,9 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
                 entities.add(entity);
             }
             return entities;
-        } catch (SQLException throwables) {
-            throw new SQLException("Can not obtain all entities of "+throwables.getMessage());
-        }finally {
+        } catch (SQLException e) {
+            throw new SQLException("Can not obtain all entities of " + e.getMessage());
+        } finally {
             closeConnections(stmt, connection);
         }
     }
@@ -48,8 +51,8 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             connection = ConnectionPool.getConnection();
             stmt = updateStatement(entity, connection);
             stmt.executeUpdate();
-        } catch (SQLException throwables) {
-            throw new SQLException("cannot update "+entity.getClass().getSimpleName());
+        } catch (SQLException e) {
+            throw new SQLException("cannot update " + entity.getClass().getSimpleName());
         } finally {
             closeConnections(stmt, connection);
         }
@@ -63,8 +66,8 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             connection = ConnectionPool.getConnection();
             stmt = deleteStatement(entity, connection);
             stmt.executeUpdate();
-        } catch (SQLException throwables) {
-            throw new SQLException("Can not delete this " +entity.getClass().getSimpleName()+throwables.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException("Can not delete this " + entity.getClass().getSimpleName() + e.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }
@@ -92,8 +95,8 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
                 }
             }
 
-        } catch (SQLException throwables) {
-            throw new SQLException("Can't insert "+entity.getClass().getSimpleName()+throwables.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException("Can't insert " + entity.getClass().getSimpleName() + e.getMessage());
         } finally {
             closeConnections(stmt, connection);
         }
@@ -108,10 +111,10 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
             connection = ConnectionPool.getConnection();
             stmt = getStatement(entity, connection);
             rs = stmt.executeQuery();
-            if(rs.next())
+            if (rs.next())
                 return getEntity(rs);
-        } catch (SQLException throwables) {
-            throw new SQLException("Can't get "+entity.getClass().getSimpleName()+" "+throwables.getMessage());
+        } catch (SQLException e) {
+            throw new SQLException("Can't get " + entity.getClass().getSimpleName() + " " + e.getMessage());
         } finally {
             closeConnections(rs, stmt, connection);
         }
@@ -124,7 +127,7 @@ public abstract class GenericDAO<T extends Entity> implements IGenericDAO<T> {
                 try {
                     autoCloseable.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("failed to close connections");
                 }
             }
         }

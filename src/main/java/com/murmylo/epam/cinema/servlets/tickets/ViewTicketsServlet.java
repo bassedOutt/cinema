@@ -3,6 +3,7 @@ package com.murmylo.epam.cinema.servlets.tickets;
 import com.murmylo.epam.cinema.db.entity.Ticket;
 import com.murmylo.epam.cinema.db.entity.User;
 import com.murmylo.epam.cinema.service.TicketService;
+import com.murmylo.epam.cinema.servlets.CommonServlet;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -15,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/tickets")
-public class ViewTicketsServlet extends HttpServlet {
+public class ViewTicketsServlet extends CommonServlet {
 
     private final Logger logger = Logger.getLogger(ViewTicketsServlet.class);
 
@@ -27,18 +28,16 @@ public class ViewTicketsServlet extends HttpServlet {
 
         try {
             TicketService ticketService = new TicketService();
-            List<Ticket> ticketList = ticketService.findUserTickets(user,lang);
-            req.setAttribute("tickets",ticketList);
+            List<Ticket> ticketList = ticketService.findUserTickets(user, lang);
+            req.setAttribute("tickets", ticketList);
             logger.info(ticketList);
 
-            try {
-                req.getRequestDispatcher("/ticket.jsp").forward(req,resp);
-                logger.info("transferred request to servlet: "+ViewTicketsServlet.class.getSimpleName());
-            } catch (ServletException | IOException e) {
-                e.printStackTrace();
-            }
+            forward("ticket.jsp", req, resp);
+
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
+            req.getSession().setAttribute("errormsg", e.getMessage());
+            sendRedirect("error.jsp", resp);
         }
     }
 }

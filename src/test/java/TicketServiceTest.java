@@ -14,8 +14,9 @@ public class TicketServiceTest {
 
     private static HikariConfig config = new HikariConfig();
     private static HikariDataSource ds;
+
     @BeforeClass
-    public static void init(){
+    public static void init() {
         config.setJdbcUrl("jdbc:mysql://localhost:3306/cinema");
         config.setUsername("root");
         config.setPassword("root_password1!");
@@ -27,14 +28,13 @@ public class TicketServiceTest {
     }
 
     @Test
-    public void TicketServiceTest(){
+    public void TicketServiceTest() {
         TicketService ticketService = new TicketService();
         User user = new User();
         user.setId(19);
 
         try {
-            List<Ticket> tickets = ticketService.findUserTickets(user,"ua");
-            System.out.println(tickets);
+            List<Ticket> tickets = ticketService.findUserTickets(user, "ua");
         } catch (SQLException e) {
             e.printStackTrace();
         }

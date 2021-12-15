@@ -1,13 +1,13 @@
 <Context>
     <Resource
-    name = "jdbc/cinema"
-    auth = "Container"
-    type = "javax.sql.DataSource"
-    factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-    maxTotal = "100" maxIdle = "30" maxWaitMillis = "10000"
-    username = "root"
-    removeAbandonedTimeout="300"
-    password = "root_password1!"
-    driverClassName = "com.mysql.cj.jdbc.Driver"
-    url = "jdbc:mysql://localhost:3306/cinema"/>
+            name="jdbc/cinema"
+            auth="Container"
+            type="javax.sql.DataSource"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+            username="root"
+            removeAbandonedTimeout="300"
+            password="root_password1!"
+            driverClassName="com.mysql.cj.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/cinema"/>
 </Context>

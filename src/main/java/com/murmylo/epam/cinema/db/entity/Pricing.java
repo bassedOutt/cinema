@@ -1,6 +1,6 @@
 package com.murmylo.epam.cinema.db.entity;
 
-public class Pricing implements Entity{
+public class Pricing implements Entity {
     private int id;
     private String name;
     private double price;
@@ -9,7 +9,8 @@ public class Pricing implements Entity{
         this.id = id;
     }
 
-    public Pricing(){}
+    public Pricing() {
+    }
 
     @Override
     public int getId() {

@@ -16,18 +16,21 @@
 <body>
 <jsp:include page="header.jsp"></jsp:include>
 <div class="grid grid-cols-4 gap-2 p-5 w-full">
-<c:forEach var="ticket" items="${tickets}">
-    <div class="px-5 py-5 flex align-middle text-center items-center place-content-center hover:bg-gray-100 border-4 border-light-blue-500 border-opacity-25">
-        <div class = "flex flex-col align-middle items-center">
-            <div class="m-2 font-medium text-lg ">Row: ${ticket.getSeat().getRow()}</div>
-            <div class="m-2 font-medium text-lg ">Seat # ${ticket.getSeat().getSeatNumber()}</div>
-            <div class="m-2 font-medium text-lg ">Price: ${ticket.getPrice()}</div>
-            <div class="p-2 m-2 w-4/6 bg-blue-100 border-rounded-md word-break">Movie: ${ticket.getSession().getMovie().getTitle()}</div>
-            <div class="p-2 m-2 w-4/6 bg-blue-100 border-rounded-md word-break">Date: ${ticket.getSession().getDate()}</div>
-            <div class="p-2 m-2 w-4/6 bg-blue-100 border-rounded-md word-break">Time: ${ticket.getSession().getStartTime()} - ${ticket.getSession().getEndTime()}</div>
+    <c:forEach var="ticket" items="${tickets}">
+        <div class="px-5 py-5 flex align-middle text-center items-center place-content-center hover:bg-gray-100 border-4 border-light-blue-500 border-opacity-25">
+            <div class="flex flex-col align-middle items-center">
+                <div class="m-2 font-medium text-lg ">Row: ${ticket.getSeat().getRow()}</div>
+                <div class="m-2 font-medium text-lg ">Seat # ${ticket.getSeat().getSeatNumber()}</div>
+                <div class="m-2 font-medium text-lg ">Price: ${ticket.getPrice()}</div>
+                <div class="p-2 m-2 w-4/6 bg-blue-100 border-rounded-md word-break">
+                    Movie: ${ticket.getSession().getMovie().getTitle()}</div>
+                <div class="p-2 m-2 w-4/6 bg-blue-100 border-rounded-md word-break">
+                    Date: ${ticket.getSession().getDate()}</div>
+                <div class="p-2 m-2 w-4/6 bg-blue-100 border-rounded-md word-break">
+                    Time: ${ticket.getSession().getStartTime()} - ${ticket.getSession().getEndTime()}</div>
+            </div>
         </div>
-    </div>
-</c:forEach>
+    </c:forEach>
 </div>
 </body>
 </html>

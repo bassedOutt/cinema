@@ -2,21 +2,20 @@ package com.murmylo.epam.cinema.servlets.movie;
 
 import com.murmylo.epam.cinema.db.entity.Movie;
 import com.murmylo.epam.cinema.service.MovieService;
+import com.murmylo.epam.cinema.servlets.CommonServlet;
 import org.apache.log4j.Logger;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/movie_submitted")
-public class MovieFormSubmitted extends HttpServlet {
+public class MovieFormSubmitted extends CommonServlet {
     private final Logger logger = Logger.getLogger(MovieFormSubmitted.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         logger.info("starts");
 
         String url = req.getParameter("url");
@@ -30,15 +29,6 @@ public class MovieFormSubmitted extends HttpServlet {
         String description_ua = req.getParameter("description_ua");
         String description_en = req.getParameter("description_en");
 
-        logger.debug("id: " + id);
-        logger.debug("url: " + url);
-        logger.debug("price: " + price);
-        logger.debug("duration: " + duration);
-        logger.debug("title ua: " + title_ua);
-        logger.debug("title en: " + title_en);
-        logger.debug("description ua: " + description_ua);
-        logger.debug("description en: " + description_en);
-
         Movie movie = new Movie();
         movie.setId(id);
         movie.setLanguage("ua");
@@ -50,31 +40,43 @@ public class MovieFormSubmitted extends HttpServlet {
 
         MovieService movieService = new MovieService();
 
+        //insert
         if (id == 0) {
-            movieService.insert(movie);
-            movieService.insertTranslation(movie);
+            try {
+                movieService.insert(movie);
+                movieService.insertTranslation(movie);
+                movieService.insertTranslation(movie);
+                movie.setLanguage("en");
+                movie.setTitle(title_en);
+                movie.setDescription(description_en);
+                logger.debug("movie after insert: " + movie);
 
-            movie.setLanguage("en");
-            movie.setTitle(title_en);
-            movie.setDescription(description_en);
-            movieService.insertTranslation(movie);
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                req.getSession().setAttribute("errormsg", e.getMessage());
+                sendRedirect("error.jsp", resp);
+                return;
+            }
 
-            logger.debug("movie after insert: "+movie);
+            //update
         } else {
-            movieService.update(movie);
-            movie.setLanguage("en");
-            movie.setTitle(title_en);
-            movie.setDescription(description_en);
-            movieService.update(movie);
-            logger.debug("movie after update: "+movie);
+            try {
+                movieService.update(movie);
+                movie.setLanguage("en");
+                movie.setTitle(title_en);
+                movie.setDescription(description_en);
+                movieService.update(movie);
+                logger.debug("movie after update: " + movie);
+
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                req.getSession().setAttribute("errormsg", e.getMessage());
+                sendRedirect("error.jsp", resp);
+                return;
+            }
 
         }
 
-        try {
-            logger.info("redirect to index");
-            resp.sendRedirect(req.getContextPath() + "/index");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendRedirect(req.getContextPath() + "/index", resp);
     }
 }

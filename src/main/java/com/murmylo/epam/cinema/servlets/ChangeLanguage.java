@@ -11,22 +11,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebServlet("/changelang")
-public class ChangeLanguage  extends HttpServlet {
+public class ChangeLanguage extends CommonServlet {
     final Logger logger = Logger.getLogger(ChangeLanguage.class);
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         logger.info("start");
-        String lang =  req.getParameter("language");
-        logger.info("language set to "+lang);
-        req.getSession().setAttribute("language",lang);
-
+        String lang = req.getParameter("language");
+        logger.info("language set to " + lang);
+        req.getSession().setAttribute("language", lang);
 
         req.getServletPath();
-        try {
-            resp.sendRedirect(req.getContextPath()+"/index.jsp");
-            logger.info("end");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        sendRedirect(req.getContextPath() + "/index", resp);
+
     }
 }

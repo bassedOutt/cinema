@@ -19,20 +19,27 @@
                 <div class="grid grid-cols-2 gap-2 my-5 mx-8">
 
                     <label for="name" class="text-xl flex items-center">Name:</label>
-                    <input type="text" id="name" name="name" placeholder="ivanov" class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
+                    <input type="text" id="name" name="name"
+                           class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
 
                     <label for="surname" class="text-xl flex items-center">Surname:</label>
-                    <input type="text" id="surname" name="surname" placeholder="ivanov" class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
+                    <input type="text" id="surname" name="surname"
+                           class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
 
                     <label for="email" class="text-xl flex items-center">Email:</label>
-                    <input type="text" id="email" name="email" placeholder="ivanov" class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
+                    <input type="email" id="email" name="email"
+                           class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
 
                     <label for="password" class="text-xl flex items-center">Password:</label>
-                    <input type="text" id="password" name="password" min="1" max="100" placeholder="secure_pass1234!" class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg  focus:outline-none focus:ring-2">
+                    <input type="password" id="password" name="password" min="1" max="100"
+                           class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg  focus:outline-none focus:ring-2">
 
                 </div>
 
-                <button type="submit" class="bg-blue-300 text-xl font-semibold px-4 py-1 rounded-lg hover:bg-blue-800 hover:text-white">Sign up</button>
+                <button type="submit"
+                        class="bg-blue-300 text-xl font-semibold px-4 py-1 rounded-lg hover:bg-blue-800 hover:text-white">
+                    Sign up
+                </button>
 
             </form>
         </div>

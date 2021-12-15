@@ -12,7 +12,9 @@ public class Seat implements Entity {
     public Seat(int id) {
         this.id = id;
     }
-    public Seat(){}
+
+    public Seat() {
+    }
 
     @Override
     public int getId() {
@@ -24,8 +26,8 @@ public class Seat implements Entity {
         this.id = id;
     }
 
-    public int getSeat(){
-        return row*10+ seatNumber -10;
+    public int getSeat() {
+        return row * 10 + seatNumber - 10;
     }
 
     public int getRow() {

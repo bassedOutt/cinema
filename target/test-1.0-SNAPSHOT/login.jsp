@@ -18,14 +18,23 @@
                 <div class="grid grid-cols-2 gap-2 my-5 mx-8">
 
                     <label for="email" class="text-xl flex items-center">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="ivanov@mail.com" class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
+                    <input type="email" id="email" name="email" placeholder="ivanov@mail.com"
+                           class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg focus:outline-none focus:ring-2">
 
                     <label for="password" class="text-xl flex items-center">Password:</label>
-                    <input type="password" id="password" name="password" min="1" max="100" placeholder="secure_pass1234!" class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg  focus:outline-none focus:ring-2">
+                    <input type="password" id="password" name="password" min="1" max="100"
+                           placeholder="secure_pass1234!"
+                           class="w-full p-1 border-2 placeholder-blue-800 border-blue-700 appearance-none rounded-lg  focus:outline-none focus:ring-2">
 
                 </div>
 
-                <button type="submit" class="bg-blue-300 text-xl font-semibold px-4 py-1 rounded-lg hover:bg-blue-800 hover:text-white">Login</button>
+                <button type="submit"
+                        class="bg-blue-300 text-xl font-semibold px-4 py-1 rounded-lg hover:bg-blue-800 hover:text-white">
+                    Login
+                </button>
+                <a href="sign_up.jsp" type="submit"
+                   class="bg-blue-300 text-xl font-semibold px-4 py-1 rounded-lg hover:bg-blue-800 hover:text-white">Sign
+                    up</a>
 
             </form>
         </div>

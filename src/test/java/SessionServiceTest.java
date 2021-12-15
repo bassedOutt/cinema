@@ -13,11 +13,12 @@ import org.junit.Test;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.List;
+import java.util.Map;
 
 public class SessionServiceTest {
 
-    private static HikariConfig config = new HikariConfig();
-    private static HikariDataSource ds;
+    private static final HikariConfig config = new HikariConfig();
 
     @BeforeClass
     public static void init() {
@@ -27,13 +28,13 @@ public class SessionServiceTest {
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        ds = new HikariDataSource(config);
+        HikariDataSource ds = new HikariDataSource(config);
         new ConnectionPool(ds);
     }
 
     @Ignore
     @Test
-    public void insertSessionSeats() {
+    public void insertSessionSeats() throws SQLException {
         SessionDAO sessionDAO = new SessionDAO();
         Session session = new Session();
         Movie movie = new Movie();
@@ -42,41 +43,39 @@ public class SessionServiceTest {
         session.setMovie(movie);
         session.setId(1);
 
-        try {
-            Session session1 = sessionDAO.get(session);
-            sessionDAO.getSessionSeats(session1);
-            System.out.println(session1);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Session session1 = sessionDAO.get(session);
+        sessionDAO.getSessionSeats(session1);
+
     }
 
     @Test
-    public void testTimeCollapse() {
+    public void testTimeCollapse() throws SQLException {
         Session session = new Session();
         session.setDate(Date.valueOf("2021-11-21"));
         session.setStartTime(Time.valueOf("16:40:00"));
         session.setEndTime(Time.valueOf("18:40:00"));
 
         SessionService sessionService = new SessionService();
-        boolean b = sessionService.noTimeOverlap(session);
-        Assert.assertEquals(true, b);
+        boolean b = false;
+        b = sessionService.noTimeOverlap(session);
+        Assert.assertTrue(b);
     }
 
     @Test
-    public void testTimeCollapse2() {
+    public void testTimeCollapse2() throws SQLException {
         Session session = new Session();
         session.setDate(Date.valueOf("2021-11-21"));
         session.setStartTime(Time.valueOf("12:40:00"));
         session.setEndTime(Time.valueOf("13:40:00"));
 
         SessionService sessionService = new SessionService();
-        boolean b = sessionService.noTimeOverlap(session);
-        Assert.assertEquals(false, b);
+        boolean b = false;
+        b = sessionService.noTimeOverlap(session);
+        Assert.assertFalse(b);
     }
 
     @Test
-    public void testTimeCollapse3() {
+    public void testTimeCollapse3() throws SQLException {
         Session session = new Session();
         session.setDate(Date.valueOf("2021-11-21"));
         session.setStartTime(Time.valueOf("12:00:00"));
@@ -84,18 +83,29 @@ public class SessionServiceTest {
 
         SessionService sessionService = new SessionService();
         boolean b = sessionService.noTimeOverlap(session);
-        Assert.assertEquals(false, b);
+        Assert.assertFalse(b);
     }
 
-    public void testTimeCollapse4() {
+    @Test
+    public void testTimeCollapse4() throws SQLException {
         Session session = new Session();
         session.setDate(Date.valueOf("2021-11-21"));
-        session.setStartTime(Time.valueOf("13:00:00"));
+        session.setStartTime(Time.valueOf("13:01:00"));
         session.setEndTime(Time.valueOf("16:00:00"));
 
         SessionService sessionService = new SessionService();
-        boolean b = sessionService.noTimeOverlap(session);
-        Assert.assertEquals(false, b);
+        boolean b = false;
+        b = sessionService.noTimeOverlap(session);
+
+        Assert.assertFalse(b);
+    }
+
+    @Test
+    public void testStatistics() throws SQLException {
+        SessionService service = new SessionService();
+        List<Session> sessionList = service.findAllLocalized("en");
+        Map<String, Long> map = service.mapMoviesVisiting(sessionList);
+        map.forEach((key, value) -> System.out.println(key + " " + value));
     }
 }
 

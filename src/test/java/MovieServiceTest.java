@@ -7,7 +7,9 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 public class MovieServiceTest {
 
@@ -42,23 +44,40 @@ public class MovieServiceTest {
         movie.setDescription("Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer, an unidentified individual who terrorizes Northern California with a killing spree.");
 
         MovieService movieService = new MovieService();
-        boolean b = movieService.insert(movie);
+        boolean b = false;
+        try {
+            b = movieService.insert(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Assert.assertTrue(b);
 
-        b = movieService.insertTranslation(movie);
+        try {
+            b = movieService.insertTranslation(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Assert.assertTrue(b);
 
         movie.setLanguage("ua");
         movie.setTitle("Зодіак");
         movie.setDescription("У період з 1968 по 1983 рік карикатурист із Сан-Франциско стає детективом-любителем, одержимим пошуком Зодіакального вбивці, невідомої особи, яка тероризує Північну Каліфорнію за допомогою вбивств.");
-        b = movieService.insertTranslation(movie);
+        try {
+            b = movieService.insertTranslation(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Assert.assertTrue(b);
 
-        movieService.delete(movie);
+        try {
+            movieService.delete(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    public void getMovie(){
+    public void getMovie() {
         Movie movie = new Movie();
         movie.setId(11);
         movie.setTitle("Fight Club");
@@ -69,13 +88,18 @@ public class MovieServiceTest {
         movie.setDescription("An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.");
 
         MovieService movieService = new MovieService();
-        Movie actual = movieService.get(movie);
+        Movie actual = null;
+        try {
+            actual = movieService.get(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        Assert.assertEquals(movie.toString(),actual.toString());
+        Assert.assertEquals(movie.toString(), Objects.requireNonNull(actual).toString());
     }
 
     @Test
-    public void getAllMovies(){
+    public void getAllMovies() {
 
         MovieService movieService = new MovieService();
         Movie movie = new Movie();
@@ -86,14 +110,31 @@ public class MovieServiceTest {
         movie.setTitle("Zodiac");
         movie.setDescription("Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer, an unidentified individual who terrorizes Northern California with a killing spree.");
 
-        movieService.insert(movie);
-        movieService.insertTranslation(movie);
+        try {
+            movieService.insert(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            movieService.insertTranslation(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        List<Movie> userList = movieService.findAll();
-        Movie actual = userList.get(userList.size()-1);
-        movieService.delete(movie);
+        List<Movie> userList = null;
+        try {
+            userList = movieService.findAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Movie actual = Objects.requireNonNull(userList).get(userList.size() - 1);
+        try {
+            movieService.delete(movie);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-        Assert.assertEquals(movie.toString(),actual.toString());
+        Assert.assertEquals(movie.toString(), actual.toString());
     }
 
 }

@@ -27,11 +27,11 @@ public class Movie implements Entity {
     public Movie() {
     }
 
-    public Movie(String language){
+    public Movie(String language) {
         this.language = language;
     }
 
-    public Movie(Movie movie){
+    public Movie(Movie movie) {
         this.id = movie.id;
         this.duration = movie.duration;
         this.imageUrl = movie.imageUrl;

@@ -17,7 +17,8 @@ public class Session implements Entity {
         this.id = sessionId;
     }
 
-    public Session(){}
+    public Session() {
+    }
 
     public List<Seat> getSeats() {
         return seats;
@@ -88,7 +89,7 @@ public class Session implements Entity {
                 '}';
     }
 
-    public long getFreeSeats(){
-        return seats.stream().filter(seat -> seat.isTaken()==false).count();
+    public long getFreeSeats() {
+        return seats.stream().filter(seat -> seat.isTaken() == false).count();
     }
 }
