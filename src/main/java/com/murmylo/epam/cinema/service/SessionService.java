@@ -7,10 +7,7 @@ import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SessionService implements IService<Session> {
@@ -104,12 +101,13 @@ public class SessionService implements IService<Session> {
 
     public List<Session> filterSessions(String filter, List<Session> sessions) {
 
-//        Date date = new Date(new java.util.Date().getTime());
         logger.info("start");
-        Date begin = Date.valueOf("2021-11-21");
-        Date end = Date.valueOf("2021-11-21");
+        Date begin = Date.valueOf("2021-12-17");
+        Date end = Date.valueOf("2021-12-17");
+//        Date end = Date.valueOf(LocalDate.now());
 
         switch (filter) {
+
             case "today":
                 break;
             case "tomorrow": {
@@ -141,12 +139,15 @@ public class SessionService implements IService<Session> {
         session.setSeats(sessionSeats);
     }
 
-    public Map<String, Long> mapMoviesVisiting(List<Session> sessions){
+    public Map<String, Long> mapMoviesVisiting(List<Session> sessions) {
         return sessions.stream()
-                .collect(Collectors.groupingBy(s->s.getMovie().getTitle(),
+                .collect(Collectors.groupingBy(s -> s.getMovie().getTitle(),
                         Collectors.mapping(this::mapSessionToCountOfSeats, Collectors.toList())))
                 .entrySet().stream()
-                    .collect(Collectors.toMap(Map.Entry::getKey, e-> sumCountOfSeatsList(e.getValue())));
+                .collect(Collectors.toMap(Map.Entry::getKey, e -> sumCountOfSeatsList(e.getValue())))
+                .entrySet().stream()
+                .sorted(Map.Entry.comparingByValue()).collect(
+                        Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     public Date addDays(Date date, int days) {
@@ -178,14 +179,16 @@ public class SessionService implements IService<Session> {
     }
 
     private final Comparator<Session> byName = Comparator.comparing((Session s) -> s.getMovie().getTitle());
-    private final Comparator<Session> byTime = Comparator.comparing((Session::getStartTime));
+    private final Comparator<Session> byTime = (Session s1, Session s2) ->
+            s1.getDate().compareTo(s2.getDate()) == 0 ? s1.getStartTime().compareTo(s2.getStartTime()) : s1.getDate().compareTo(s2.getDate());
+
     private final Comparator<Session> bySeats = Comparator.comparing(Session::getFreeSeats);
 
-    private long mapSessionToCountOfSeats(Session session){
+    private long mapSessionToCountOfSeats(Session session) {
         return session.getSeats().stream().filter(Seat::isTaken).count();
     }
 
-    private long sumCountOfSeatsList(List<Long> seats){
+    private long sumCountOfSeatsList(List<Long> seats) {
         return seats.stream().reduce(0L, Long::sum);
     }
 

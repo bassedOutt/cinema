@@ -14,7 +14,8 @@
     <div class="max-w-5xl mx-auto px-6 sm:px-6 lg:px-8">
         <div class="bg-white w-full shadow rounded p-8 sm:p-12">
             <p class="text-3xl font-bold leading-7 text-center">Edit session</p>
-            <form action="${req.contextPath}/movie_edited" method="get">
+
+            <form action="${req.contextPath}/movie_edited" method="post">
                 <input type="hidden" name="session_id" value="${session1.getId()}">
                 <div class="md:flex items-center mt-12">
                     <div class="w-full md:w-1/2 flex flex-col">
@@ -67,13 +68,7 @@
                                class="leading-none text-gray-900 p-3 focus:outline-none focus:border-blue-700 mt-4 bg-gray-100 border rounded border-gray-200"/>
                     </div>
                 </div>
-                <%--                <div>--%>
-                <%--                    <div class="w-full flex flex-col mt-8">--%>
-                <%--                        <label class="font-semibold leading-none">Message</label>--%>
-                <%--                        <textarea type="text"--%>
-                <%--                                  class="h-40 text-base leading-none text-gray-900 p-3 focus:oultine-none focus:border-blue-700 mt-4 bg-gray-100 border rounded border-gray-200"></textarea>--%>
-                <%--                    </div>--%>
-                <%--                </div>--%>
+
                 <div class="w=1/2 px-3 mt-8 border rounded text-center bg-red-200">${errormessage}</div>
                 <div class="flex items-center justify-center w-full">
                     <button class="mt-9 font-semibold leading-none text-white py-4 px-10 bg-blue-700 rounded hover:bg-blue-600 focus:ring-2 focus:ring-offset-2 focus:ring-blue-700 focus:outline-none">

@@ -15,7 +15,7 @@
         <div class="bg-white w-full shadow rounded p-8 sm:p-12">
             <p class="text-3xl font-bold leading-7 text-center">Edit Movie</p>
 
-            <form action="${req.contextPath}/movie_submitted" method="get">
+            <form action="${req.contextPath}/movie_submitted" method="post">
 
                 <input type="hidden" name="id" value="${requestScope.movie_en.id}">
                 <div class="md:flex items-center mt-8">

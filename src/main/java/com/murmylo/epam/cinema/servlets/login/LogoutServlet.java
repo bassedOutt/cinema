@@ -13,6 +13,6 @@ public class LogoutServlet extends CommonServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
         request.removeAttribute("user");
-        sendRedirect(request.getContextPath(), response);
+        sendRedirect(request.getContextPath()+"/index", response);
     }
 }

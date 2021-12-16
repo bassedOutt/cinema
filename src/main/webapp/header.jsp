@@ -33,7 +33,8 @@
                        class="block lg:inline-block pl-4  text-lg  hover:text-white mr-4">New session</a>
                     <a href="${req.contextPath}/edit_movie"
                        class="block lg:inline-block pl-4  text-lg  hover:text-white mr-4">New Movie</a>
-                    <a href = "${req.contextPath}/statistics">Statistics</a>
+                    <a href="${req.contextPath}/statistics"
+                       class="block lg:inline-block pl-4  text-lg  hover:text-white mr-4">Statistics</a>
                 </c:if>
             </c:if>
         </div>

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 @WebServlet("/movie_submitted")
@@ -15,8 +16,14 @@ public class MovieFormSubmitted extends CommonServlet {
     private final Logger logger = Logger.getLogger(MovieFormSubmitted.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         logger.info("starts");
+
+        try {
+            req.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error("failed to set encoding to utf-8");
+        }
 
         String url = req.getParameter("url");
         int id = Integer.parseInt(req.getParameter("id"));
@@ -38,6 +45,7 @@ public class MovieFormSubmitted extends CommonServlet {
         movie.setImageUrl(url);
         movie.setDescription(description_ua);
 
+        logger.debug(movie);
         MovieService movieService = new MovieService();
 
         //insert
@@ -45,10 +53,10 @@ public class MovieFormSubmitted extends CommonServlet {
             try {
                 movieService.insert(movie);
                 movieService.insertTranslation(movie);
-                movieService.insertTranslation(movie);
                 movie.setLanguage("en");
                 movie.setTitle(title_en);
                 movie.setDescription(description_en);
+                movieService.insertTranslation(movie);
                 logger.debug("movie after insert: " + movie);
 
             } catch (SQLException e) {
@@ -74,7 +82,6 @@ public class MovieFormSubmitted extends CommonServlet {
                 sendRedirect("error.jsp", resp);
                 return;
             }
-
         }
 
         sendRedirect(req.getContextPath() + "/index", resp);

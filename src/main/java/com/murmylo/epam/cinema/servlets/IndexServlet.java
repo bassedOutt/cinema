@@ -54,15 +54,12 @@ public class IndexServlet extends CommonServlet {
         String sfilter = (String) req.getSession().getAttribute("filter");
         String srange = (String) req.getSession().getAttribute("range");
 
-        logger.debug("filter: " + sfilter);
-        logger.debug("range: " + srange);
-        logger.debug(srange);
-
-        if (sfilter != null)
-            sessions = sessionService.sortSessions(sfilter, sessions);
-
         if (srange != null)
             sessions = sessionService.filterSessions(srange, sessions);
+
+        if (sfilter != null) {
+            sessions = sessionService.sortSessions(sfilter, sessions);
+        }
 
         int noOfRecords = sessions != null ? sessions.size() : 0;
         int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
@@ -78,6 +75,4 @@ public class IndexServlet extends CommonServlet {
 
         forward("index.jsp", req, resp);
     }
-
-
 }

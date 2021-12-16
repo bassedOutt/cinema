@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -27,9 +28,15 @@ public class SubmitEditServlet extends CommonServlet {
     private final Logger logger = Logger.getLogger(SubmitEditServlet.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         logger.info("starts");
+
+        try {
+            req.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error("failed to set encoding to utf-8");
+        }
 
         String language = (String) req.getSession().getAttribute("language");
         String title = req.getParameter("movie_title");
@@ -71,8 +78,8 @@ public class SubmitEditServlet extends CommonServlet {
 
         if (!CanUpdateTime(toDateTime(date1, start), toDateTime(date1, end), Objects.requireNonNull(movie1).getDuration())) {
             logger.debug("can't update time");
-            req.setAttribute("errormessage", "movie session time difference can not be less than it's duration");
-            forward("edit_session?id=" + sessionId, req, resp);
+            req.getSession().setAttribute("errormessage", "movie session time difference can not be less than it's duration");
+            sendRedirect("edit_session?id=" + sessionId, resp);
             return;
         }
 
@@ -80,14 +87,14 @@ public class SubmitEditServlet extends CommonServlet {
         Session session = new Session(sessionId);
 
         if (start.before(Time.valueOf("9:00:00"))) {
-            req.setAttribute("errormessage", "movies can not start earlier than 9 am");
-            forward("edit_session?id=" + sessionId, req, resp);
+            req.getSession().setAttribute("errormessage", "movies can not start earlier than 9 am");
+            sendRedirect("edit_session?id=" + sessionId,  resp);
             return;
         }
 
         if (start.after(Time.valueOf("22:00:00"))) {
-            req.setAttribute("errormessage", "movies can not start after than 10 pm");
-            forward("edit_session?id=" + sessionId, req, resp);
+            req.getSession().setAttribute("errormessage", "movies can not start after than 10 pm");
+            sendRedirect("edit_session?id=" + sessionId,  resp);
             return;
         }
 
@@ -99,8 +106,8 @@ public class SubmitEditServlet extends CommonServlet {
         try {
             if (!sessionService.noTimeOverlap(session)) {
                 logger.debug("can't update time, overlap");
-                req.setAttribute("errormessage", "there's already a session going on that time, please consider another time");
-                forward("edit_session?id=" + sessionId, req, resp);
+                req.getSession().setAttribute("errormessage", "there's already a session going on that time, please consider another time");
+                sendRedirect("edit_session?id=" + sessionId,  resp);
                 return;
             }
         } catch (SQLException e) {

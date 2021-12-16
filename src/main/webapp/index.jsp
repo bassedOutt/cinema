@@ -65,6 +65,7 @@
                         <div class="m-1">${session.getDate()}</div>
                         <div class="m-1">${session.getStartTime()} - ${session.getEndTime()}</div>
                         <div class="m-1">Free seats: ${session.getFreeSeats()}</div>
+
                         <div class="m-1">
                             <form method="get" action="${req.contextPath}/movie_session">
                                 <input type="hidden" name="id" value="${session.getId()}">
@@ -73,16 +74,25 @@
                                 </button>
                             </form>
                         </div>
+
                         <c:if test="${sessionScope.user!=null}">
                             <c:if test="${sessionScope.user.isAdmin()==true}">
-                                <div class="flex align-middle w-2/3 space-x-2">
-                                    <a class=" w-full text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                       href="${req.contextPath}/edit_session?id=${session.getId()}">Edit</a>
-                                    <a class="w-full text-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                       href="${req.contextPath}/delete_session?id=${session.getId()}">Delete</a>
+
+                                <div class="flex justify-items-center justify-center w-2/3 space-x-2">
+                                    <form method="get" action="${req.contextPath}/edit_session">
+                                        <button type="submit" class="w-full m-auto text-center bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Edit</button>
+                                    <input type="hidden" name="id" value="${session.getId()}">
+                                    </form>
+
+                                    <form method="post" action="${req.contextPath}/delete_session">
+                                        <input type="hidden" name="id" value="${session.getId()}">
+                                        <button type="submit" class="w-full m-auto text-center bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                                    </form>
+
                                 </div>
                             </c:if>
                         </c:if>
+
                     </div>
                 </c:forEach>
             </div>
