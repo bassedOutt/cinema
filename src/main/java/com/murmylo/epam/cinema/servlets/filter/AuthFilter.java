@@ -7,6 +7,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AuthFilter implements Filter {
@@ -30,6 +31,10 @@ public class AuthFilter implements Filter {
             return;
         }
 
+        List<? extends Integer> list = new ArrayList<Integer>();
+        list.add(null);
+
+        //iterable-collection-set queue list
         if ((user == null || !user.isAdmin()) && adminUrls.contains(uri)) {
             resp.sendRedirect(req.getContextPath() + "/login.jsp");
             return;

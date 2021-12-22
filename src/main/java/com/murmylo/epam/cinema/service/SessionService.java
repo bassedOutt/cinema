@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 public class SessionService implements IService<Session> {
@@ -102,9 +104,8 @@ public class SessionService implements IService<Session> {
     public List<Session> filterSessions(String filter, List<Session> sessions) {
 
         logger.info("start");
-        Date begin = Date.valueOf("2021-12-17");
-        Date end = Date.valueOf("2021-12-17");
-//        Date end = Date.valueOf(LocalDate.now());
+        Date end = Date.valueOf(LocalDate.now());
+        Date begin = Date.valueOf(LocalDate.now());
 
         switch (filter) {
 
@@ -138,6 +139,7 @@ public class SessionService implements IService<Session> {
         List<Seat> sessionSeats = seats.stream().filter(seat -> seat.getSessionId() == session.getId()).collect(Collectors.toList());
         session.setSeats(sessionSeats);
     }
+
 
     public Map<String, Long> mapMoviesVisiting(List<Session> sessions) {
         return sessions.stream()

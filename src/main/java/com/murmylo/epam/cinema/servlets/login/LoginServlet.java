@@ -1,5 +1,4 @@
 package com.murmylo.epam.cinema.servlets.login;
-
 import com.murmylo.epam.cinema.db.entity.User;
 import com.murmylo.epam.cinema.service.UserService;
 import com.murmylo.epam.cinema.servlets.CommonServlet;
